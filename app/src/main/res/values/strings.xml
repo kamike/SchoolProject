@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">SchoolProject</string>
+    <string name="title_activity_base">BaseActivity</string>
+    <string name="select_school">选择学校</string>
+    <string name="input_school_name">点击搜索学校</string>
+    <string name="cancle">取消</string>
+    <string name="location_ing">定位中...</string>
+</resources>
