@@ -1,5 +1,7 @@
 package com.pursuege.schoolproject.bean;
 
+import java.util.ArrayList;
+
 /**
  * Created by wangtao on 2017/7/28.
  */
@@ -16,7 +18,7 @@ public class SchollInfoBean {
     public String loginNo;
     public String mnc;
     public String upTime;
-    public SchoolAreaBean childArea;
+    public ArrayList<SchoolAreaBean> childArea;
 
     @Override
     public String toString() {

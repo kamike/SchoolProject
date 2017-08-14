@@ -1,8 +1,16 @@
 package com.pursuege.schoolproject.ui;
 
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.TextView;
+
+import com.pursuege.schoolproject.R;
+import com.pursuege.schoolproject.bean.SchollInfoBean;
+
+import java.util.ArrayList;
 
 /**
  * Created by wangtao on 2017/8/11.
@@ -11,34 +19,46 @@ import android.widget.BaseExpandableListAdapter;
 public class SchoolExpandAdapter extends BaseExpandableListAdapter {
 
 
+    private final ArrayList<SchollInfoBean> list;
+    private final Context context;
+
+    public SchoolExpandAdapter(Context mainActivity, ArrayList<SchollInfoBean> list) {
+        this.list = list;
+        this.context = mainActivity;
+
+    }
+
     @Override
     public int getGroupCount() {
-        return 0;
+        return list.size();
     }
 
     @Override
     public int getChildrenCount(int i) {
-        return 0;
+        if (list.get(i).childArea == null) {
+            return 0;
+        }
+        return list.get(i).childArea.size();
     }
 
     @Override
     public Object getGroup(int i) {
-        return null;
+        return list.get(i);
     }
 
     @Override
     public Object getChild(int i, int i1) {
-        return null;
+        return list.get(i).childArea.get(i1);
     }
 
     @Override
     public long getGroupId(int i) {
-        return 0;
+        return i;
     }
 
     @Override
     public long getChildId(int i, int i1) {
-        return 0;
+        return i1;
     }
 
     @Override
@@ -48,12 +68,20 @@ public class SchoolExpandAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
-        return null;
+        TextView textView = (TextView) LayoutInflater.from(context).inflate(R.layout.txt_item, null);
+        textView.setText(list.get(i).college);
+        return textView;
     }
 
     @Override
-    public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
-        return null;
+    public View getChildView(int position, int childPosition, boolean b, View view, ViewGroup viewGroup) {
+        TextView textView = (TextView) LayoutInflater.from(context).inflate(R.layout.txt_item, null);
+        if (list.get(position).childArea != null) {
+            if (list.get(position).childArea.size() > childPosition) {
+                textView.setText(list.get(position).childArea.get(childPosition).kind);
+            }
+        }
+        return textView;
     }
 
     @Override

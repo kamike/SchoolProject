@@ -36,4 +36,8 @@
         <item name="android:textSize">@dimen/txt_content</item>
         <item name="android:textColor">@color/txt_normal</item>
     </style>
+    <style name="style_text_nortmal">
+        <item name="android:textSize">@dimen/txt_title</item>
+        <item name="android:textColor">@color/txt_normal</item>
+    </style>
 </resources>

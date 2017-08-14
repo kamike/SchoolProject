@@ -14,6 +14,7 @@ import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.pursuege.schoolproject.bean.SchollInfoBean;
 import com.pursuege.schoolproject.ui.BaseTitleActivity;
+import com.pursuege.schoolproject.ui.SchoolExpandAdapter;
 import com.pursuege.schoolproject.utils.LocationUtils;
 import com.pursuege.schoolproject.utils.LogUtils;
 import com.pursuege.schoolproject.utils.NetworkCore;
@@ -127,7 +128,7 @@ public class MainActivity extends BaseTitleActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSuccess(ArrayList<SchollInfoBean> list) {
         LogUtils.i("定位返回的数据：" + list);
-
+        listView.setAdapter(new SchoolExpandAdapter(this,list));
 
     }
 

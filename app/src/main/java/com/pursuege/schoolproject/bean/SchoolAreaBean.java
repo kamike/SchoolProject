@@ -9,4 +9,5 @@ public class SchoolAreaBean {
     public String college;
     public String lavel;
     public String picUrl;
+    public String city;
 }
