@@ -27,9 +27,7 @@ public class ApplyNotifyActivity extends BaseTitleActivity {
         return getResources().getString(R.string.select_school);
     }
 
-    public void onclickLocation(View v) {
 
-    }
 
 
 }

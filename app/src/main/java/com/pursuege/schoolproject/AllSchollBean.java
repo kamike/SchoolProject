@@ -1,5 +1,7 @@
 package com.pursuege.schoolproject;
 
+import com.pursuege.schoolproject.bean.SchollInfoBean;
+
 import java.util.ArrayList;
 
 /**

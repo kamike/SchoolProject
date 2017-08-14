@@ -5,4 +5,8 @@
     <string name="input_school_name">点击搜索学校</string>
     <string name="cancle">取消</string>
     <string name="location_ing">定位中...</string>
+    <string name="select_school_and_are">，请选择你所在的学校和校区</string>
+    <string name="location_fail_again">定位失败，请保证网络通畅，点击重新定位！</string>
+    <string name="permission_fail">授权失败，请在设置里开启权限！</string>
+    <string name="comfirm">确定</string>
 </resources>
