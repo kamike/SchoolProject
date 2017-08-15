@@ -9,4 +9,6 @@
     <string name="location_fail_again">定位失败，请保证网络通畅，点击重新定位！</string>
     <string name="permission_fail">授权失败，请在设置里开启权限！</string>
     <string name="comfirm">确定</string>
+    <string name="readed">已阅</string>
+    <string name="next">下一步</string>
 </resources>

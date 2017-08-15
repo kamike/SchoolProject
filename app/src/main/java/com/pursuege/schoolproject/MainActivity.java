@@ -137,4 +137,8 @@ public class MainActivity extends BaseTitleActivity {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
+    public void onclickMainNext(View v){
+        finish();
+    }
 }
