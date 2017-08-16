@@ -15,5 +15,5 @@ public interface Constants {
 
     String NetwException = "Network Exception";
 
-    String selectShool = "/ssm/selectSchool";
+    String selectShool = "/ssm/getSchool";
 }

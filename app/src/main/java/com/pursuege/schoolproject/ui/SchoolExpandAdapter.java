@@ -35,10 +35,10 @@ public class SchoolExpandAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int i) {
-        if (list.get(i).childArea == null) {
+        if (list.get(i).deptList == null) {
             return 0;
         }
-        return list.get(i).childArea.size();
+        return list.get(i).deptList.size();
     }
 
     @Override
@@ -48,7 +48,7 @@ public class SchoolExpandAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int i, int i1) {
-        return list.get(i).childArea.get(i1);
+        return list.get(i).deptList.get(i1);
     }
 
     @Override
@@ -76,9 +76,9 @@ public class SchoolExpandAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int position, int childPosition, boolean b, View view, ViewGroup viewGroup) {
         TextView textView = (TextView) LayoutInflater.from(context).inflate(R.layout.txt_item, null);
-        if (list.get(position).childArea != null) {
-            if (list.get(position).childArea.size() > childPosition) {
-                textView.setText(list.get(position).childArea.get(childPosition).kind);
+        if (list.get(position).deptList != null) {
+            if (list.get(position).deptList.size() > childPosition) {
+                textView.setText(list.get(position).deptList.get(childPosition).dept);
             }
         }
         return textView;

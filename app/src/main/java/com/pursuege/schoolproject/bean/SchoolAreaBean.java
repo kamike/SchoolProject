@@ -5,9 +5,8 @@ package com.pursuege.schoolproject.bean;
  */
 
 public class SchoolAreaBean {
-    public String kind;
-    public String college;
-    public String lavel;
-    public String picUrl;
-    public String city;
+    public int cidId;
+    public int collId;
+    public String dept;
+
 }

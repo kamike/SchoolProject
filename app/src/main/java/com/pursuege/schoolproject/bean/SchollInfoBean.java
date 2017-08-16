@@ -7,33 +7,12 @@ import java.util.ArrayList;
  */
 
 public class SchollInfoBean {
-    public String cid;
-    public int cidId;
     public int collId;
     public String college;
-    public String dept;
     public int id;
-    public String lac;
-    public String loginName;
-    public String loginNo;
-    public String mnc;
+    public String prov;
     public String upTime;
-    public ArrayList<SchoolAreaBean> childArea;
+    public ArrayList<SchoolAreaBean> deptList;
 
-    @Override
-    public String toString() {
-        return "SchollInfoBean{" +
-                "cid='" + cid + '\'' +
-                ", cidId=" + cidId +
-                ", collId=" + collId +
-                ", college='" + college + '\'' +
-                ", dept='" + dept + '\'' +
-                ", id=" + id +
-                ", lac='" + lac + '\'' +
-                ", loginName='" + loginName + '\'' +
-                ", loginNo='" + loginNo + '\'' +
-                ", mnc='" + mnc + '\'' +
-                ", upTime='" + upTime + '\'' +
-                '}';
-    }
+
 }
