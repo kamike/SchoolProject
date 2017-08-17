@@ -20,11 +20,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static com.alibaba.fastjson.JSON.parseObject;
+
 /**
  * Created by wangtao on 2017/8/11.
  */
 
 public class NetworkCore implements Constants {
+
     public static void doPostParams(String urlName, HashMap<String, Object> params, final Class t) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(Constants.TIMEOUT, TimeUnit.SECONDS)
@@ -56,7 +59,7 @@ public class NetworkCore implements Constants {
                     return;
                 }
                 try {
-                    BaseServerBean base = JSON.parseObject(resoult, BaseServerBean.class);
+                    BaseServerBean base = parseObject(resoult, BaseServerBean.class);
                     if (base == null) {
                         EventBus.getDefault().post("");
                         return;
@@ -66,10 +69,54 @@ public class NetworkCore implements Constants {
                         return;
                     }
                     if (t.isArray()) {
-                        EventBus.getDefault().post(JSON.parseArray(base.data, t));
+                        EventBus.getDefault().post(JSON.parseArray(base.data, t.getComponentType()));
                     } else {
                         EventBus.getDefault().post(JSON.parseObject(base.data, t));
                     }
+                } catch (JSONException e) {
+                    LogUtils.i("Exception:" + resoult);
+                    EventBus.getDefault().post("");
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+    }
+
+    public static void doPostBase(String urlName, HashMap<String, Object> params, final Class t) {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(Constants.TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(Constants.TIMEOUT, TimeUnit.SECONDS)
+                .build();
+        FormBody.Builder formbody = new FormBody.Builder();
+        if (params != null) {
+            for (String key : params.keySet()) {
+                formbody.add(key, params.get(key) + "");
+            }
+        }
+        FormBody body = formbody.build();
+        final Request req = new Request.Builder()
+                .url(Constants.BASEURL + "/" + urlName)
+                .post(body)
+                .addHeader("Content-Type", "applicationapplication/json")
+                .build();
+        client.newCall(req).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                EventBus.getDefault().post("");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String resoult = response.body().string();
+                if (TextUtils.isEmpty(resoult)) {
+                    EventBus.getDefault().post("");
+                    return;
+                }
+                try {
+                    BaseServerBean base = parseObject(resoult, BaseServerBean.class);
+                    EventBus.getDefault().post(base);
                 } catch (JSONException e) {
                     LogUtils.i("Exception:" + resoult);
                     EventBus.getDefault().post("");
@@ -114,7 +161,7 @@ public class NetworkCore implements Constants {
                     return;
                 }
                 try {
-                    BaseServerBean base = JSON.parseObject(resoult, BaseServerBean.class);
+                    BaseServerBean base = parseObject(resoult, BaseServerBean.class);
                     if (base == null) {
                         EventBus.getDefault().post("");
                         return;
@@ -126,7 +173,7 @@ public class NetworkCore implements Constants {
                     if (t.isArray()) {
                         EventBus.getDefault().post(JSON.parseArray(base.data, t.getComponentType()));
                     } else {
-                        EventBus.getDefault().post(JSON.parseObject(base.data, t));
+                        EventBus.getDefault().post(parseObject(base.data, t));
                     }
                 } catch (JSONException e) {
                     LogUtils.i("Exception:" + resoult);

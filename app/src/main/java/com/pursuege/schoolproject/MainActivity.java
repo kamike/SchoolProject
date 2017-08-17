@@ -100,6 +100,7 @@ public class MainActivity extends BaseTitleActivity {
                 }
                 if (TextUtils.isEmpty(city)) {
                     tvLocation.setText(R.string.location_fail_again);
+
                     return;
                 }
                 tvLocation.setText(city + getResources().getString(R.string.select_school_and_are));
@@ -123,6 +124,8 @@ public class MainActivity extends BaseTitleActivity {
             return;
         }
         doShowToast(message);
+        //
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

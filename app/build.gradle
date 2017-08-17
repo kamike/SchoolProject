@@ -39,4 +39,6 @@ dependencies {
     compile 'com.alibaba:fastjson:1.2.36'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile files('libs/BaiduLBS_Android.jar')
+
+    compile 'com.blankj:utilcode:1.8.2'
 }
