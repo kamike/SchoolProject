@@ -1,6 +1,7 @@
 package com.pursuege.schoolproject.ui;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +22,17 @@ public class SchoolExpandAdapter extends BaseExpandableListAdapter {
 
     private final ArrayList<SchollInfoBean> list;
     private final Context context;
+    private int blue, normal;
+    private Drawable drawableLine;
 
     public SchoolExpandAdapter(Context mainActivity, ArrayList<SchollInfoBean> list) {
         this.list = list;
         this.context = mainActivity;
-
+        blue = context.getResources().getColor(R.color.txt_blue);
+        normal = context.getResources().getColor(R.color.txt_normal);
+        drawableLine = context.getResources().getDrawable(R.drawable.icon_line_blue);
+        selectPosition = -1;
+        selectChildPosition = -1;
     }
 
     @Override
@@ -67,25 +74,51 @@ public class SchoolExpandAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
-        TextView textView = (TextView) LayoutInflater.from(context).inflate(R.layout.txt_item, null);
+    public View getGroupView(final int i, boolean b, View view, ViewGroup viewGroup) {
+        final TextView textView = (TextView) LayoutInflater.from(context).inflate(R.layout.txt_item, null);
         textView.setText(list.get(i).college);
+        if (i == selectPosition) {
+            textView.setTextColor(blue);
+        } else {
+            textView.setTextColor(normal);
+        }
+
         return textView;
     }
 
+    public static int selectPosition = -1;
+    public static int selectChildPosition = -1;
+
     @Override
-    public View getChildView(int position, int childPosition, boolean b, View view, ViewGroup viewGroup) {
-        TextView textView = (TextView) LayoutInflater.from(context).inflate(R.layout.txt_item, null);
+    public View getChildView(final int position, final int childPosition, boolean b, View view, ViewGroup viewGroup) {
+        TextView textView = (TextView) LayoutInflater.from(context).inflate(R.layout.item_text_shcool_child, null);
         if (list.get(position).deptList != null) {
             if (list.get(position).deptList.size() > childPosition) {
                 textView.setText(list.get(position).deptList.get(childPosition).dept);
             }
+        }
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectChildPosition = childPosition;
+                selectPosition = position;
+                notifyDataSetChanged();
+
+            }
+        });
+
+        if (childPosition == selectChildPosition) {
+            textView.setTextColor(blue);
+            textView.setCompoundDrawables(drawableLine, null, null, null);
+        } else {
+            textView.setTextColor(normal);
+            textView.setCompoundDrawables(null, null, null, null);
         }
         return textView;
     }
 
     @Override
     public boolean isChildSelectable(int i, int i1) {
-        return false;
+        return true;
     }
 }

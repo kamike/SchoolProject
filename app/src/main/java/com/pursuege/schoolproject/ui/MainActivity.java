@@ -1,4 +1,4 @@
-package com.pursuege.schoolproject;
+package com.pursuege.schoolproject.ui;
 
 
 import android.Manifest;
@@ -12,9 +12,8 @@ import android.widget.Toast;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
+import com.pursuege.schoolproject.R;
 import com.pursuege.schoolproject.bean.SchollInfoBean;
-import com.pursuege.schoolproject.ui.BaseTitleActivity;
-import com.pursuege.schoolproject.ui.SchoolExpandAdapter;
 import com.pursuege.schoolproject.utils.LocationUtils;
 import com.pursuege.schoolproject.utils.LogUtils;
 import com.pursuege.schoolproject.utils.NetworkCore;
@@ -131,7 +130,7 @@ public class MainActivity extends BaseTitleActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSuccess(ArrayList<SchollInfoBean> list) {
         LogUtils.i("定位返回的数据：" + list);
-        listView.setAdapter(new SchoolExpandAdapter(this,list));
+        listView.setAdapter(new SchoolExpandAdapter(this, list));
 
     }
 
@@ -141,7 +140,12 @@ public class MainActivity extends BaseTitleActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    public void onclickMainNext(View v){
+    public void onclickMainNext(View v) {
+        if (SchoolExpandAdapter.selectPosition == -1 || SchoolExpandAdapter.selectChildPosition == -1) {
+            doShowMesage(R.string.not_select_school,null);
+            return;
+        }
+        doStartActivity(SelectOperatNameActivity.class);
         finish();
     }
 }

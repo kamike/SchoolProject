@@ -3,7 +3,9 @@
     style="@style/style_text_nortmal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    android:focusable="false"
     android:gravity="center_vertical"
-    android:padding="12dp"
-    android:orientation="vertical" />
+    android:orientation="vertical"
+    android:padding="12dp" />
 

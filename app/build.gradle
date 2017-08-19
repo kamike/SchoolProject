@@ -30,15 +30,14 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile files('libs/BaiduLBS_Android.jar')
+
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
     compile 'com.android.support:design:26.+'
-    compile 'com.alibaba:fastjson:1.2.33'
-    testCompile 'junit:junit:4.12'
-    compile 'com.squareup.okhttp3:okhttp:3.8.1'
     compile 'com.alibaba:fastjson:1.2.36'
+    compile 'com.squareup.okhttp3:okhttp:3.8.1'
     compile 'org.greenrobot:eventbus:3.0.0'
-    compile files('libs/BaiduLBS_Android.jar')
-
     compile 'com.blankj:utilcode:1.8.2'
+    testCompile 'junit:junit:4.12'
 }

@@ -6,6 +6,7 @@ import android.webkit.WebView;
 import android.widget.Button;
 
 import com.pursuege.schoolproject.ui.BaseTitleActivity;
+import com.pursuege.schoolproject.ui.MainActivity;
 
 public class ApplyNotifyActivity extends BaseTitleActivity {
 
