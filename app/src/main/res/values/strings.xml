@@ -15,4 +15,9 @@
     <string name="select_operate_name">选择运营商</string>
     <string name="toast_select">温馨提示：</string>
     <string name="toast_select_1">可手动点击手机卡选择其他运营商。\n如系统推荐正确，则无需进行选择</string>
+    <string name="setting_noftify_type">设置提醒方式</string>
+    <string name="message_push">消息推送</string>
+    <string name="jar">震动</string>
+    <string name="music">铃声</string>
+    <string name="submit">提交</string>
 </resources>
