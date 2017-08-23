@@ -106,5 +106,21 @@
         </LinearLayout>
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
+    <Button
+        android:id="@+id/apply_notify_next_btn"
+        style="@style/style_txt_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/icon_button_bg"
+        android:clickable="true"
+        android:onClick="onclickOperateNext"
+        android:paddingBottom="14dp"
+        android:paddingTop="14dp"
+        android:text="@string/readed" />
 </LinearLayout>

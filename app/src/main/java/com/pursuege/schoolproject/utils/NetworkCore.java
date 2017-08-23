@@ -84,21 +84,15 @@ public class NetworkCore implements Constants {
 
     }
 
-    public static void doPostBase(String urlName, HashMap<String, Object> params, final Class t) {
+    public static void doGetCid(String urlName, final String flag) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(Constants.TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(Constants.TIMEOUT, TimeUnit.SECONDS)
                 .build();
-        FormBody.Builder formbody = new FormBody.Builder();
-        if (params != null) {
-            for (String key : params.keySet()) {
-                formbody.add(key, params.get(key) + "");
-            }
-        }
-        FormBody body = formbody.build();
+
         final Request req = new Request.Builder()
                 .url(Constants.BASEURL + "/" + urlName)
-                .post(body)
+                .get()
                 .addHeader("Content-Type", "applicationapplication/json")
                 .build();
         client.newCall(req).enqueue(new Callback() {
@@ -116,6 +110,11 @@ public class NetworkCore implements Constants {
                 }
                 try {
                     BaseServerBean base = parseObject(resoult, BaseServerBean.class);
+                    if (base == null) {
+                        EventBus.getDefault().post("");
+                        return;
+                    }
+                    base.flag = flag;
                     EventBus.getDefault().post(base);
                 } catch (JSONException e) {
                     LogUtils.i("Exception:" + resoult);

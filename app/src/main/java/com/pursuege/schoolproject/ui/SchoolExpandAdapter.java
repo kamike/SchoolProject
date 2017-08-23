@@ -82,6 +82,15 @@ public class SchoolExpandAdapter extends BaseExpandableListAdapter {
         } else {
             textView.setTextColor(normal);
         }
+        if (list.get(i).deptList == null || list.get(i).deptList.isEmpty()) {
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    selectPosition = i;
+                    notifyDataSetChanged();
+                }
+            });
+        }
 
         return textView;
     }

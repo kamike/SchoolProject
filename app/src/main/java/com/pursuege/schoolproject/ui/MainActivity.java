@@ -14,6 +14,7 @@ import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.pursuege.schoolproject.R;
 import com.pursuege.schoolproject.bean.SchollInfoBean;
+import com.pursuege.schoolproject.bean.SchoolAreaBean;
 import com.pursuege.schoolproject.utils.LocationUtils;
 import com.pursuege.schoolproject.utils.LogUtils;
 import com.pursuege.schoolproject.utils.NetworkCore;
@@ -58,7 +59,7 @@ public class MainActivity extends BaseTitleActivity {
 
     public void onclickLocation(View v) {
         tvLocation.setText(R.string.location_ing);
-        if (PermissionUtil.checkPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+        if (PermissionUtil.checkPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION,0)) {
             onLocationPermission();
         }
 
@@ -130,9 +131,11 @@ public class MainActivity extends BaseTitleActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSuccess(ArrayList<SchollInfoBean> list) {
         LogUtils.i("定位返回的数据：" + list);
+        this.list=list;
         listView.setAdapter(new SchoolExpandAdapter(this, list));
 
     }
+    private ArrayList<SchollInfoBean> list;
 
     @Override
     protected void onDestroy() {
@@ -141,11 +144,20 @@ public class MainActivity extends BaseTitleActivity {
     }
 
     public void onclickMainNext(View v) {
-        if (SchoolExpandAdapter.selectPosition == -1 || SchoolExpandAdapter.selectChildPosition == -1) {
-            doShowMesage(R.string.not_select_school,null);
+        if (SchoolExpandAdapter.selectPosition == -1||list==null||list.isEmpty()) {
+            doShowMesage(R.string.not_select_school, null);
             return;
         }
-        doStartActivity(SelectOperatNameActivity.class);
+
+        if(SchoolExpandAdapter.selectChildPosition>=0){
+            SchoolAreaBean childInfo = list.get(SchoolExpandAdapter.selectPosition).deptList.get(SchoolExpandAdapter.selectChildPosition);
+            SelectOperatNameActivity.startOperateSelect(this,childInfo.collId+"");
+        }else{
+            SchollInfoBean info = list.get(SchoolExpandAdapter.selectPosition);
+            SelectOperatNameActivity.startOperateSelect(this,info.collId+"");
+        }
+
+
         finish();
     }
 }

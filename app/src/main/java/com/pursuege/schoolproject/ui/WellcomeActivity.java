@@ -2,7 +2,6 @@ package com.pursuege.schoolproject.ui;
 
 import android.view.View;
 
-import com.pursuege.schoolproject.ApplyNotifyActivity;
 import com.pursuege.schoolproject.R;
 
 public class WellcomeActivity extends BaseActivity {

@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context="com.pursuege.schoolproject.ApplyNotifyActivity">
+    tools:context="com.pursuege.schoolproject.ui.ApplyNotifyActivity">
 
 
     <EditText

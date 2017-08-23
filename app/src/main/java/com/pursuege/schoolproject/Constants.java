@@ -11,9 +11,10 @@ public interface Constants {
 
     public static boolean DEBUG_TOGGLE = true;
 
-    long TIMEOUT = 30;
+    long TIMEOUT = 120*1000;
 
     String NetwException = "Network Exception";
 
     String selectShool = "/ssm/getSchool";
+    String selectCidData = "/ssm/getTabCid";
 }

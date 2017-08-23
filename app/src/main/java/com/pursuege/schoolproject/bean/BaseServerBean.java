@@ -9,4 +9,5 @@ public class BaseServerBean {
     public String data;//":[],
     public String state;//:"success"
     public String message;
+    public String flag;
 }
