@@ -1,5 +1,6 @@
 package com.pursuege.schoolproject.ui;
 
+import android.content.SharedPreferences;
 import android.view.View;
 
 import com.pursuege.schoolproject.R;
@@ -15,7 +16,14 @@ public class WellcomeActivity extends BaseActivity {
     @Override
     public void setupUiView() {
         finish();
-        doStartActivity(ApplyNotifyActivity.class);
+        SharedPreferences share = getApplication().getSharedPreferences("share",MODE_PRIVATE);
+        if (share.getBoolean("isSaveData", false)) {
+            doStartActivity(SettingActivity.class);
+        } else {
+            doStartActivity(ApplyNotifyActivity.class);
+
+        }
+
     }
 
 

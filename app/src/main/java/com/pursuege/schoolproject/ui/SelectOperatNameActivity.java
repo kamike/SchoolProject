@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.pursuege.schoolproject.R;
+import com.pursuege.schoolproject.utils.LogUtils;
 import com.pursuege.schoolproject.utils.PermissionUtil;
 
 import java.util.List;
@@ -215,8 +216,10 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
     private String mncSIm1;
     private String mncSIm2;
     public void onclickOperateNext(View v) {
+        String str=getIntent().getStringExtra("id_cid");
+        LogUtils.i("cidid--end:"+str);
 
-        SettingActivity.startActivity(this,getIntent().getStringExtra("id_cid"),mncSIm1,mncSIm2);
+        SettingActivity.startActivity(this,str,mncSIm1,mncSIm2);
         finish();
     }
 
@@ -224,6 +227,7 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
     public static void startOperateSelect(Context context, String idId) {
         Intent intent = new Intent(context, SelectOperatNameActivity.class);
         intent.putExtra("id_cid", idId);
+
         context.startActivity(intent);
     }
 }

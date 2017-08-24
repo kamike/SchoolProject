@@ -151,12 +151,12 @@ public class MainActivity extends BaseTitleActivity {
 
         if(SchoolExpandAdapter.selectChildPosition>=0){
             SchoolAreaBean childInfo = list.get(SchoolExpandAdapter.selectPosition).deptList.get(SchoolExpandAdapter.selectChildPosition);
-            SelectOperatNameActivity.startOperateSelect(this,childInfo.collId+"");
+            LogUtils.i("cidid--start:"+childInfo.toString());
+            SelectOperatNameActivity.startOperateSelect(this,childInfo.cidId+"");
         }else{
             SchollInfoBean info = list.get(SchoolExpandAdapter.selectPosition);
             SelectOperatNameActivity.startOperateSelect(this,info.collId+"");
         }
-
 
         finish();
     }

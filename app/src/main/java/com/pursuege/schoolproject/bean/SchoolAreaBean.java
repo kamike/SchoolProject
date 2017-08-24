@@ -9,4 +9,12 @@ public class SchoolAreaBean {
     public int collId;
     public String dept;
 
+    @Override
+    public String toString() {
+        return "SchoolAreaBean{" +
+                "cidId=" + cidId +
+                ", collId=" + collId +
+                ", dept='" + dept + '\'' +
+                '}';
+    }
 }

@@ -8,11 +8,18 @@ import android.content.SharedPreferences;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
+import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.FileIOUtils;
+import com.blankj.utilcode.util.ServiceUtils;
 import com.pursuege.schoolproject.R;
 import com.pursuege.schoolproject.bean.BaseServerBean;
+import com.pursuege.schoolproject.bean.CidDataBean;
+import com.pursuege.schoolproject.bean.MncCidBean;
+import com.pursuege.schoolproject.service.MyBackgroundService;
+import com.pursuege.schoolproject.utils.CidIdUtils;
 import com.pursuege.schoolproject.utils.LogUtils;
 import com.pursuege.schoolproject.utils.NetworkCore;
 
@@ -22,10 +29,12 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class SettingActivity extends BaseTitleActivity {
 
     private ImageView ivMsg, ivjar, ivMusic;
+    private Button btnSubmit;
 
     @Override
     public String setTopTitle() {
@@ -43,11 +52,29 @@ public class SettingActivity extends BaseTitleActivity {
         ivMsg = (ImageView) findViewById(R.id.setting_msg_switch_iv);
         ivjar = (ImageView) findViewById(R.id.setting_jar_switch_iv);
         ivMusic = (ImageView) findViewById(R.id.setting_music_switch_iv);
+        btnSubmit = (Button) findViewById(R.id.apply_notify_next_btn);
+
         EventBus.getDefault().register(this);
-        share = getPreferences(MODE_PRIVATE);
-        isMessage=share.getBoolean("isMessage",true);
-        isJar=share.getBoolean("isJar",true);
-        isMusic=share.getBoolean("isMusic",true);
+        share = getApplication().getSharedPreferences("share", MODE_PRIVATE);
+        isMessage = share.getBoolean("isMessage", true);
+        isJar = share.getBoolean("isJar", true);
+        isMusic = share.getBoolean("isMusic", true);
+        if (isMessage) {
+            ivMsg.setImageResource(R.drawable.icon_switch_no);
+        } else {
+            ivMsg.setImageResource(R.drawable.icon_switch_off);
+        }
+        if (isJar) {
+            ivjar.setImageResource(R.drawable.icon_switch_no);
+        } else {
+            ivjar.setImageResource(R.drawable.icon_switch_off);
+        }
+        if (isMusic) {
+            ivMusic.setImageResource(R.drawable.icon_switch_no);
+        } else {
+            ivMusic.setImageResource(R.drawable.icon_switch_off);
+        }
+
     }
 
     SharedPreferences share;
@@ -57,6 +84,14 @@ public class SettingActivity extends BaseTitleActivity {
 
     @Override
     public void setupAllData() {
+        if (share.getBoolean("isSaveData", false)) {
+            btnSubmit.setVisibility(View.GONE);
+            getCacheData();
+            return;
+        } else {
+            btnSubmit.setVisibility(View.VISIBLE);
+        }
+
         cidId = getIntent().getStringExtra("id_cid");
         mncSim1 = getIntent().getStringExtra("mncSIm1");
         mncSim2 = getIntent().getStringExtra("mncSIm2");
@@ -89,7 +124,9 @@ public class SettingActivity extends BaseTitleActivity {
             NetworkCore.doGetCid(sb.toString(), "2");
         }
 
+
     }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onFail(String msg) {
@@ -201,6 +238,40 @@ public class SettingActivity extends BaseTitleActivity {
         }).show();
 
     }
+
+
+    private void getCacheData() {
+        MncCidBean mainMnc = CidIdUtils.getMainMncCid(this);
+        if (mainMnc == null) {
+            doShowToast("未获取到主卡数据");
+            return;
+        }
+        File file = new File(Environment.getExternalStorageDirectory() + "/data/" + mainMnc.mnc + "/cid_all_data");
+        if (!file.exists()) {
+            doShowToast("没有主卡对应的数据，请重新更新数据！");
+            return;
+        }
+        String data = FileIOUtils.readFile2String(file);
+        if (TextUtils.isEmpty(data)) {
+            doShowToast("没有主卡对应的数据，请重新更新数据！");
+            return;
+        }
+        ArrayList<CidDataBean> listCid = (ArrayList<CidDataBean>) JSON.parseArray(data, CidDataBean.class);
+        if (listCid == null || listCid.isEmpty()) {
+            doShowToast("没有主卡对应的数据，请重新更新数据！");
+            return;
+        }
+        MyBackgroundService.listCidAll=listCid;
+        //拿到副卡的数据
+
+        LogUtils.i("获取到本地多少条数据？" + listCid.size());
+        if(!ServiceUtils.isServiceRunning(MyBackgroundService.class.getName())){
+            ServiceUtils.startService(MyBackgroundService.class);
+        };
+    }
+
+
+
 
     public static void startActivity(Context context, String id_cid, String mncSIm1, String mncSIm2) {
         Intent intent = new Intent(context, SettingActivity.class);
