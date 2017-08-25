@@ -85,58 +85,61 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     private void onStatePermission() {
-        SubscriptionManager mSubscriptionManager = (SubscriptionManager) getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
             setSimpleSimData();
             return;
         }
-        List<SubscriptionInfo> dataList = mSubscriptionManager.getActiveSubscriptionInfoList();
-        if (dataList == null || dataList.isEmpty()) {
-            setSimpleSimData();
-            return;
-        }
-        if (dataList.size() == 1) {
-            SubscriptionInfo info = dataList.get(0);
-            switch (info.getMnc()) {
-                case 0:
-                case 2://移动
-                    mncSIm1="5";
-                    ivOperateSim1.setImageResource(R.drawable.icon_mobile);
-                    break;
+        SubscriptionManager mSubscriptionManager = (SubscriptionManager) getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
 
-                case 1:
-                    mncSIm1="1";
-                    ivOperateSim1.setImageResource(R.drawable.icon_unicom);
-                    break;
-                default:
-                    mncSIm1="3";
-                    ivOperateSim1.setImageResource(R.drawable.icon_telecom);
-                    break;
-
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
+            List<SubscriptionInfo> dataList = mSubscriptionManager.getActiveSubscriptionInfoList();
+            if (dataList == null || dataList.isEmpty()) {
+                setSimpleSimData();
+                return;
             }
+            if (dataList.size() == 1) {
+                SubscriptionInfo info = dataList.get(0);
+                switch (info.getMnc()) {
+                    case 0:
+                    case 2://移动
+                        mncSIm1 = "5";
+                        ivOperateSim1.setImageResource(R.drawable.icon_mobile);
+                        break;
 
-        } else {
-            SubscriptionInfo info = dataList.get(1);
-            switch (info.getMnc()) {
-                case 0:
-                case 2://移动
-                    mncSIm2="5";
-                    ivOperateSim2.setImageResource(R.drawable.icon_mobile);
-                    break;
+                    case 1:
+                        mncSIm1 = "1";
+                        ivOperateSim1.setImageResource(R.drawable.icon_unicom);
+                        break;
+                    default:
+                        mncSIm1 = "3";
+                        ivOperateSim1.setImageResource(R.drawable.icon_telecom);
+                        break;
 
-                case 1:
-                    mncSIm2="1";
-                    ivOperateSim2.setImageResource(R.drawable.icon_unicom);
-                    break;
-                default:
-                    mncSIm2="3";
-                    ivOperateSim2.setImageResource(R.drawable.icon_telecom);
-                    break;
+                }
 
+            } else {
+                SubscriptionInfo info = dataList.get(1);
+                switch (info.getMnc()) {
+                    case 0:
+                    case 2://移动
+                        mncSIm2 = "5";
+                        ivOperateSim2.setImageResource(R.drawable.icon_mobile);
+                        break;
+
+                    case 1:
+                        mncSIm2 = "1";
+                        ivOperateSim2.setImageResource(R.drawable.icon_unicom);
+                        break;
+                    default:
+                        mncSIm2 = "3";
+                        ivOperateSim2.setImageResource(R.drawable.icon_telecom);
+                        break;
+
+                }
             }
         }
+
     }
 
     private void setSimpleSimData() {
@@ -145,17 +148,19 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
         if (imsi != null) {
             if (imsi.startsWith("46000") || imsi.startsWith("46002")) {//因为移动网络编号46000下的IMSI已经用完，所以虚拟了一个46002编号，134/159号段使用了此编号
                 //中国移动
-                mncSIm1="5";
+                mncSIm1 = "5";
                 ivOperateSim1.setImageResource(R.drawable.icon_mobile);
             } else if (imsi.startsWith("46001")) {
                 //中国联通
-                mncSIm1="1";
+                mncSIm1 = "1";
                 ivOperateSim1.setImageResource(R.drawable.icon_unicom);
             } else if (imsi.startsWith("46003")) {
                 //中国电信
-                mncSIm1="3";
+                mncSIm1 = "3";
                 ivOperateSim1.setImageResource(R.drawable.icon_telecom);
             }
+        }else{
+
         }
     }
 
@@ -171,15 +176,15 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
                 selectSim1 = i;
                 switch (i) {
                     case 0:
-                        mncSIm1="5";
+                        mncSIm1 = "5";
                         ivOperateSim1.setImageResource(R.drawable.icon_mobile);
                         break;
                     case 1:
-                        mncSIm1="1";
+                        mncSIm1 = "1";
                         ivOperateSim1.setImageResource(R.drawable.icon_unicom);
                         break;
                     case 2:
-                        mncSIm1="3";
+                        mncSIm1 = "3";
                         ivOperateSim1.setImageResource(R.drawable.icon_telecom);
                         break;
                 }
@@ -197,15 +202,15 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
                 selectSim2 = i;
                 switch (i) {
                     case 0:
-                        mncSIm2="5";
+                        mncSIm2 = "5";
                         ivOperateSim2.setImageResource(R.drawable.icon_mobile);
                         break;
                     case 1:
-                        mncSIm2="1";
+                        mncSIm2 = "1";
                         ivOperateSim2.setImageResource(R.drawable.icon_unicom);
                         break;
                     case 2:
-                        mncSIm2="3";
+                        mncSIm2 = "3";
                         ivOperateSim2.setImageResource(R.drawable.icon_telecom);
                         break;
                 }
@@ -215,11 +220,12 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
 
     private String mncSIm1;
     private String mncSIm2;
-    public void onclickOperateNext(View v) {
-        String str=getIntent().getStringExtra("id_cid");
-        LogUtils.i("cidid--end:"+str);
 
-        SettingActivity.startActivity(this,str,mncSIm1,mncSIm2);
+    public void onclickOperateNext(View v) {
+        String str = getIntent().getStringExtra("id_cid");
+        LogUtils.i("cidid--end:" + str);
+
+        SettingActivity.startActivity(this, str, mncSIm1, mncSIm2);
         finish();
     }
 

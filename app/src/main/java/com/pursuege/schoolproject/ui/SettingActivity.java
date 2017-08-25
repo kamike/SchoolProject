@@ -1,11 +1,15 @@
 package com.pursuege.schoolproject.ui;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -30,6 +34,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static com.pursuege.schoolproject.R.drawable.icon_mobile_enable;
 
 public class SettingActivity extends BaseTitleActivity {
 
@@ -261,16 +267,22 @@ public class SettingActivity extends BaseTitleActivity {
             doShowToast("没有主卡对应的数据，请重新更新数据！");
             return;
         }
-        MyBackgroundService.listCidAll=listCid;
+        MyBackgroundService.listCidAll = listCid;
         //拿到副卡的数据
 
         LogUtils.i("获取到本地多少条数据？" + listCid.size());
-        if(!ServiceUtils.isServiceRunning(MyBackgroundService.class.getName())){
-            ServiceUtils.startService(MyBackgroundService.class);
-        };
+        if (!ServiceUtils.isServiceRunning(MyBackgroundService.class.getName())) {
+//            ServiceUtils.startService(MyBackgroundService.class);
+        }
+        NotificationCompat.Builder nb = new NotificationCompat.Builder(this);
+        nb.setContentTitle(null).setContentText("您已进入优惠基站范围，请断开一次数据连接后再使用");
+        nb.setSmallIcon(icon_mobile_enable).setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.icon_mobile_enable));
+        nb.setContentInfo("移动...").setWhen(System.currentTimeMillis());
+        nb.setOngoing(true);
+        NotificationManager manager = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
+        manager.notify(0, nb.build());
+
     }
-
-
 
 
     public static void startActivity(Context context, String id_cid, String mncSIm1, String mncSIm2) {
