@@ -2,12 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        config {
-            keyAlias 'mldp'
-            keyPassword '02640264a'
-            storeFile file('E:/treatWoSign/treatwo.keystore')
-            storePassword '02640264a'
-        }
     }
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
@@ -24,9 +18,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        debug {
-            signingConfig signingConfigs.config
-        }
+
     }
     sourceSets {
         main {

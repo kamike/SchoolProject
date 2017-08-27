@@ -197,6 +197,11 @@ public class SettingActivity extends BaseTitleActivity {
         if (isMessage) {
             isMessage = false;
             ivMsg.setImageResource(R.drawable.icon_switch_off);
+            //通知关掉了
+            isJar=true;
+            onclickJarSwitch(null);
+            isMusic=true;
+            onclickMusicSwitch(null);
         } else {
             isMessage = true;
             ivMsg.setImageResource(R.drawable.icon_switch_no);
@@ -272,15 +277,9 @@ public class SettingActivity extends BaseTitleActivity {
 
         LogUtils.i("获取到本地多少条数据？" + listCid.size());
         if (!ServiceUtils.isServiceRunning(MyBackgroundService.class.getName())) {
-//            ServiceUtils.startService(MyBackgroundService.class);
+            ServiceUtils.startService(MyBackgroundService.class);
         }
-        NotificationCompat.Builder nb = new NotificationCompat.Builder(this);
-        nb.setContentTitle(null).setContentText("您已进入优惠基站范围，请断开一次数据连接后再使用");
-        nb.setSmallIcon(icon_mobile_enable).setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.icon_mobile_enable));
-        nb.setContentInfo("移动...").setWhen(System.currentTimeMillis());
-        nb.setOngoing(true);
-        NotificationManager manager = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
-        manager.notify(0, nb.build());
+
 
     }
 
