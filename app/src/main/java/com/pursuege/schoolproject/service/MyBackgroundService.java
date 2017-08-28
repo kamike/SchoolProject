@@ -39,7 +39,7 @@ public class MyBackgroundService extends Service {
      * 双卡数据
      */
     public static MncCidBean[] allMncList = new MncCidBean[2];
-    public static final int timeDelay = 30 * 1000;
+    public static final int timeDelay = 10 * 1000;
 
     @Override
     public void onCreate() {
@@ -50,9 +50,11 @@ public class MyBackgroundService extends Service {
             @Override
             public void run() {
                 while (true) {
+                    LogUtils.i("onCreate====while -===true");
                     if (listCacheCidAll == null) {
+                        LogUtils.i("缓存的数据是空的");
                         sleepTime(timeDelay);
-                        return;
+                        continue;
                     }
 
                     MncCidBean mainMncList = CidIdUtils.getMainMncCid(getApplication());

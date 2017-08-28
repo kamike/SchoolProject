@@ -240,7 +240,7 @@ public class SettingActivity extends BaseTitleActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
                 btnSubmit.setVisibility(View.GONE);
-                ServiceUtils.startService(MyBackgroundService.class);
+                getCacheData();
             }
         }).show();
 
