@@ -1,15 +1,11 @@
 package com.pursuege.schoolproject.ui;
 
 import android.app.AlertDialog;
-import android.app.NotificationManager;
-import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.os.Environment;
-import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -34,8 +30,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import static com.pursuege.schoolproject.R.drawable.icon_mobile_enable;
 
 public class SettingActivity extends BaseTitleActivity {
 
@@ -198,9 +192,9 @@ public class SettingActivity extends BaseTitleActivity {
             isMessage = false;
             ivMsg.setImageResource(R.drawable.icon_switch_off);
             //通知关掉了
-            isJar=true;
+            isJar = true;
             onclickJarSwitch(null);
-            isMusic=true;
+            isMusic = true;
             onclickMusicSwitch(null);
         } else {
             isMessage = true;
@@ -245,6 +239,8 @@ public class SettingActivity extends BaseTitleActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
+                btnSubmit.setVisibility(View.GONE);
+                ServiceUtils.startService(MyBackgroundService.class);
             }
         }).show();
 
@@ -272,7 +268,7 @@ public class SettingActivity extends BaseTitleActivity {
             doShowToast("没有主卡对应的数据，请重新更新数据！");
             return;
         }
-        MyBackgroundService.listCidAll = listCid;
+        MyBackgroundService.listCacheCidAll = listCid;
         //拿到副卡的数据
 
         LogUtils.i("获取到本地多少条数据？" + listCid.size());

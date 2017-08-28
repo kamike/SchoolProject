@@ -2,10 +2,15 @@ package com.pursuege.schoolproject.ui;
 
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +36,7 @@ public class MainActivity extends BaseTitleActivity {
 
     private ExpandableListView listView;
     private TextView tvLocation;
+    private EditText etSearch;
 
     @Override
     public View getContentBaseView() {
@@ -43,6 +49,7 @@ public class MainActivity extends BaseTitleActivity {
         super.setupUiView();
         listView = (ExpandableListView) findViewById(R.id.main_listview);
         tvLocation = (TextView) findViewById(R.id.main_localtion_tv);
+        etSearch = (EditText) findViewById(R.id.main_search_et);
         EventBus.getDefault().register(this);
     }
 
@@ -50,6 +57,22 @@ public class MainActivity extends BaseTitleActivity {
     public void setupAllData() {
 //        listView.setAdapter();
         onclickLocation(null);
+        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    im.hideSoftInputFromWindow(getCurrentFocus().getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
+                    HashMap<String, Object> parmas = new HashMap<>();
+                    parmas.put("college", etSearch.getText().toString());
+                    parmas.put("page", "1");
+                    NetworkCore.doGetParams(selectShool, parmas, SchollInfoBean[].class);
+
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -59,7 +82,7 @@ public class MainActivity extends BaseTitleActivity {
 
     public void onclickLocation(View v) {
         tvLocation.setText(R.string.location_ing);
-        if (PermissionUtil.checkPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION,0)) {
+        if (PermissionUtil.checkPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION, 0)) {
             onLocationPermission();
         }
 
@@ -131,10 +154,14 @@ public class MainActivity extends BaseTitleActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSuccess(ArrayList<SchollInfoBean> list) {
         LogUtils.i("定位返回的数据：" + list);
-        this.list=list;
+        if(list==null||list.isEmpty()){
+            doShowToast("没有任何数据！");
+        }
+        this.list = list;
         listView.setAdapter(new SchoolExpandAdapter(this, list));
 
     }
+
     private ArrayList<SchollInfoBean> list;
 
     @Override
@@ -144,18 +171,18 @@ public class MainActivity extends BaseTitleActivity {
     }
 
     public void onclickMainNext(View v) {
-        if (SchoolExpandAdapter.selectPosition == -1||list==null||list.isEmpty()) {
+        if (SchoolExpandAdapter.selectPosition == -1 || list == null || list.isEmpty()) {
             doShowMesage(R.string.not_select_school, null);
             return;
         }
 
-        if(SchoolExpandAdapter.selectChildPosition>=0){
+        if (SchoolExpandAdapter.selectChildPosition >= 0) {
             SchoolAreaBean childInfo = list.get(SchoolExpandAdapter.selectPosition).deptList.get(SchoolExpandAdapter.selectChildPosition);
-            LogUtils.i("cidid--start:"+childInfo.toString());
-            SelectOperatNameActivity.startOperateSelect(this,childInfo.cidId+"");
-        }else{
+            LogUtils.i("cidid--start:" + childInfo.toString());
+            SelectOperatNameActivity.startOperateSelect(this, childInfo.cidId + "");
+        } else {
             SchollInfoBean info = list.get(SchoolExpandAdapter.selectPosition);
-            SelectOperatNameActivity.startOperateSelect(this,info.collId+"");
+            SelectOperatNameActivity.startOperateSelect(this, info.collId + "");
         }
 
         finish();

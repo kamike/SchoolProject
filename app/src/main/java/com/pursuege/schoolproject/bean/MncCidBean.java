@@ -5,7 +5,14 @@ package com.pursuege.schoolproject.bean;
  */
 
 public class MncCidBean {
-    public String mnc;
+    public int mnc;
     public String cidId;
     public boolean isMainSim;
+
+    @Override
+    public String toString() {
+        return "MncCidBean{" +
+                "mnc='" + mnc + '\'' +
+                ", cidId='" + cidId;
+    }
 }
