@@ -15,7 +15,6 @@ public class WellcomeActivity extends BaseActivity {
 
     @Override
     public void setupUiView() {
-        finish();
         SharedPreferences share = getApplication().getSharedPreferences("share",MODE_PRIVATE);
         if (share.getBoolean("isSaveData", false)) {
             doStartActivity(SettingActivity.class);
@@ -23,6 +22,7 @@ public class WellcomeActivity extends BaseActivity {
             doStartActivity(ApplyNotifyActivity.class);
 
         }
+        finish();
 
     }
 

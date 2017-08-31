@@ -1,14 +1,19 @@
 package com.pursuege.schoolproject.service;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.Vibrator;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 
@@ -33,7 +38,7 @@ public class MyBackgroundService extends Service {
      * 从v本地获取到的缓存
      */
     public static ArrayList<CidDataBean> listCacheCidAll;
-//    private Vibrator vibrator;
+    private Vibrator vibrator;
 
     /**
      * 双卡数据
@@ -45,7 +50,7 @@ public class MyBackgroundService extends Service {
     public void onCreate() {
         super.onCreate();
         CidIdUtils.setCidListener(this);
-//        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         new Thread() {
             @Override
             public void run() {
@@ -117,6 +122,19 @@ public class MyBackgroundService extends Service {
         @Override
         public void handleMessage(Message msg) {
             SharedPreferences share = getApplication().getSharedPreferences("share", MODE_PRIVATE);
+
+            if (share.getBoolean("isJar", true)) {
+                long[] pattern = {10, 100};   // 停止 开启 停止 开启
+                vibrator.vibrate(pattern, -1);
+
+
+            }
+            if (share.getBoolean("isMusic", true)) {
+                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+                r.play();
+            }
+
             //没有推送就什么都不做了
             if (!share.getBoolean("isMessage", true)) {
                 return;
@@ -153,25 +171,11 @@ public class MyBackgroundService extends Service {
             nb.setAutoCancel(true);
 
 
-            if (share.getBoolean("isJar", true)) {
-
-                long[] pattern = {10, 100};   // 停止 开启 停止 开启
-                if (share.getBoolean("isMusic", true)) {
-                    nb.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
-//                    vibrator.vibrate(pattern, 0);
-                } else {
-                    nb.setDefaults(Notification.DEFAULT_VIBRATE);
-//                    vibrator.vibrate(pattern, -1);
-                }
-            } else {
-                if (share.getBoolean("isMusic", true)) {
-                    nb.setDefaults(Notification.DEFAULT_SOUND);
-                }
-            }
-
             NotificationManager manager = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
-            manager.notify(0, nb.build());
+            manager.notify(998, nb.build());
         }
+
+
     };
 
     private void sleepTime(int time) {
@@ -183,24 +187,19 @@ public class MyBackgroundService extends Service {
         return;
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-
-        return super.onStartCommand(intent, START_FLAG_RETRY, startId);
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         ServiceUtils.startService(MyBackgroundService.class);
-//        if (vibrator != null) {
-//            vibrator.cancel();
-//        }
+        if (vibrator != null) {
+            vibrator.cancel();
+        }
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 }

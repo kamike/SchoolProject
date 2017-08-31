@@ -185,6 +185,6 @@ public class MainActivity extends BaseTitleActivity {
             SelectOperatNameActivity.startOperateSelect(this, info.collId + "");
         }
 
-        finish();
+
     }
 }

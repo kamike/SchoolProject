@@ -242,7 +242,7 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
         LogUtils.i("cidid--end:" + str);
 
         SettingActivity.startActivity(this, str, mncSIm1, mncSIm2);
-        finish();
+
     }
 
 

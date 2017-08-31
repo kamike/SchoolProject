@@ -1,6 +1,7 @@
 package com.pursuege.schoolproject.ui;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.alibaba.fastjson.JSON;
+import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.FileIOUtils;
 import com.blankj.utilcode.util.ServiceUtils;
 import com.pursuege.schoolproject.R;
@@ -191,11 +193,13 @@ public class SettingActivity extends BaseTitleActivity {
         if (isMessage) {
             isMessage = false;
             ivMsg.setImageResource(R.drawable.icon_switch_off);
-            //通知关掉了
-            isJar = true;
-            onclickJarSwitch(null);
-            isMusic = true;
-            onclickMusicSwitch(null);
+//            //通知关掉了
+//            isJar = true;
+//            onclickJarSwitch(null);
+//            isMusic = true;
+//            onclickMusicSwitch(null);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.cancel(998);
         } else {
             isMessage = true;
             ivMsg.setImageResource(R.drawable.icon_switch_no);
@@ -239,10 +243,15 @@ public class SettingActivity extends BaseTitleActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
-                btnSubmit.setVisibility(View.GONE);
-                getCacheData();
+                //btnSubmit.setVisibility(View.GONE);
+                ActivityUtils.finishAllActivities();
+//                getCacheData();
+                Intent intent = new Intent(SettingActivity.this, SettingActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+
             }
-        }).show();
+        }).setCancelable(false).show();
 
     }
 

@@ -65,7 +65,6 @@ public class ApplyNotifyActivity extends BaseTitleActivity {
     }
 
     public void onclickReadNext(View v) {
-        finish();
         doStartActivity(MainActivity.class);
     }
 
