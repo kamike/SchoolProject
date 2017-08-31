@@ -124,7 +124,7 @@ public class MyBackgroundService extends Service {
             SharedPreferences share = getApplication().getSharedPreferences("share", MODE_PRIVATE);
 
             if (share.getBoolean("isJar", true)) {
-                long[] pattern = {10, 100};   // 停止 开启 停止 开启
+                long[] pattern = {10, 300,50,500};   // 停止 开启 停止 开启
                 vibrator.vibrate(pattern, -1);
 
 
