@@ -103,10 +103,19 @@
         android:layout_marginLeft="12dp"
         android:background="@color/color_line" />
 
-    <View
+    <TextView
+        android:id="@+id/setting_content_tv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:padding="15dp" />
+
+    <TextView
+        android:id="@+id/setting_content_tv2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="15dp" />
 
 
     <Button

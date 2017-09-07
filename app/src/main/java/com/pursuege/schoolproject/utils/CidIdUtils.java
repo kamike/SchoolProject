@@ -73,6 +73,25 @@ public class CidIdUtils {
         return 5;
     }
 
+    public static int getSimpleSimData(String imsi) {
+
+        if (imsi != null) {
+            if (imsi.startsWith("46000") || imsi.startsWith("46002") || imsi.startsWith("46004") || imsi.startsWith("46007")) {
+                //中国移动
+                return 5;
+            } else if (imsi.startsWith("46001") || imsi.startsWith("46006") || imsi.startsWith("46009")) {
+                //中国联通
+                return 1;
+            } else if (imsi.startsWith("46003") || imsi.startsWith("46005") || imsi.startsWith("46011") || imsi.startsWith("460011")) {
+                //中国电信
+                return 3;
+            }
+        } else {
+
+        }
+        return 5;
+    }
+
 
     public static void setCidListener(Context context) {
 
@@ -135,6 +154,7 @@ public class CidIdUtils {
         @Override
         public void onCellLocationChanged(CellLocation location) {
             super.onCellLocationChanged(location);
+            LogUtils.i("onCellLocationChanged222");
             if (location == null) {
                 return;
             }
@@ -144,17 +164,35 @@ public class CidIdUtils {
                     MncCidBean cidBean = new MncCidBean();
                     cidBean.cidId = gsm.getCid() + "";
                     LogUtils.i("2卡的cid:" + gsm.getCid());
-                    MyBackgroundService.allMncList[1] = cidBean;
+                    if (MyBackgroundService.allMncList[1] != null) {
+                        MyBackgroundService.allMncList[1].cidId = gsm.getCid() + "";
+                    }
+
                 }
             }
             if (location instanceof CdmaCellLocation) {
                 CdmaCellLocation cdma = (CdmaCellLocation) location;
                 if (cdma != null) {
-                    MncCidBean cidBean = new MncCidBean();
-                    cidBean.cidId = cdma.getBaseStationId() + "";
-                    MyBackgroundService.allMncList[1] = cidBean;
+                    if (MyBackgroundService.allMncList[1] != null) {
+                        MyBackgroundService.allMncList[1].cidId = cdma.getBaseStationId() + "";
+                    }
                 }
             }
+        }
+
+        @Override
+        public void onServiceStateChanged(ServiceState serviceState) {
+            super.onServiceStateChanged(serviceState);
+
+            //获取网络运营商
+//            getSimpleSimData  46001   46000
+            if (serviceState != null) {
+                LogUtils.i("onServiceStateChanged2222:" + serviceState.getOperatorNumeric());
+                if (MyBackgroundService.allMncList[1] != null) {
+                    MyBackgroundService.allMncList[1].mnc = getSimpleSimData(serviceState.getOperatorNumeric());
+                }
+            }
+
         }
     }
 
@@ -171,22 +209,22 @@ public class CidIdUtils {
         @Override
         public void onCellLocationChanged(CellLocation location) {
             super.onCellLocationChanged(location);
-
+            LogUtils.i("onCellLocationChanged1111111");
             if (location instanceof GsmCellLocation) {
                 GsmCellLocation gsm = (GsmCellLocation) location;
                 if (gsm != null) {
-                    MncCidBean cidBean = new MncCidBean();
-                    cidBean.cidId = gsm.getCid() + "";
-                    LogUtils.i("1卡的cid:" + gsm.getCid());
-                    MyBackgroundService.allMncList[0] = cidBean;
+
+                    if (MyBackgroundService.allMncList[0] != null) {
+                        MyBackgroundService.allMncList[0].cidId = gsm.getCid() + "";
+                    }
                 }
             }
             if (location instanceof CdmaCellLocation) {
                 CdmaCellLocation cdma = (CdmaCellLocation) location;
                 if (cdma != null) {
-                    MncCidBean cidBean = new MncCidBean();
-                    cidBean.cidId = cdma.getBaseStationId() + "";
-                    MyBackgroundService.allMncList[0] = cidBean;
+                    if (MyBackgroundService.allMncList[0] != null) {
+                        MyBackgroundService.allMncList[0].cidId = cdma.getBaseStationId() + "";
+                    }
                 }
             }
         }
@@ -194,10 +232,14 @@ public class CidIdUtils {
         @Override
         public void onServiceStateChanged(ServiceState serviceState) {
             super.onServiceStateChanged(serviceState);
+
             //获取网络运营商
 //            getSimpleSimData  46001   46000
             if (serviceState != null) {
-                serviceState.getOperatorNumeric();
+                LogUtils.i("onServiceStateChanged11111111:" + serviceState.getOperatorNumeric());
+                if (MyBackgroundService.allMncList[0] != null) {
+                    MyBackgroundService.allMncList[0].mnc = getSimpleSimData(serviceState.getOperatorNumeric());
+                }
             }
 
         }

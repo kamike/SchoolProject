@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.ActivityUtils;
@@ -32,11 +33,14 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SettingActivity extends BaseTitleActivity {
 
     private ImageView ivMsg, ivjar, ivMusic;
     private Button btnSubmit;
+    private TextView tvContent;
+    private TextView tvContent2;
 
     @Override
     public String setTopTitle() {
@@ -51,12 +55,14 @@ public class SettingActivity extends BaseTitleActivity {
     @Override
     public void setupUiView() {
         super.setupUiView();
+        EventBus.getDefault().register(this);
         ivMsg = (ImageView) findViewById(R.id.setting_msg_switch_iv);
         ivjar = (ImageView) findViewById(R.id.setting_jar_switch_iv);
         ivMusic = (ImageView) findViewById(R.id.setting_music_switch_iv);
         btnSubmit = (Button) findViewById(R.id.apply_notify_next_btn);
+        tvContent = (TextView) findViewById(R.id.setting_content_tv);
+        tvContent2 = (TextView) findViewById(R.id.setting_content_tv2);
 
-        EventBus.getDefault().register(this);
         share = getApplication().getSharedPreferences("share", MODE_PRIVATE);
         isMessage = share.getBoolean("isMessage", true);
         isJar = share.getBoolean("isJar", true);
@@ -302,4 +308,22 @@ public class SettingActivity extends BaseTitleActivity {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFail(MncCidBean mnc) {
+
+        tvContent.setText("主卡数据：" + mnc);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFail(MncCidBean[] mnc) {
+        if (mnc == null || mnc.length == 0) {
+            tvContent2.setText("获取双卡方式没有数据");
+            return;
+        }
+        tvContent2.setText("主卡副卡数据：" + Arrays.toString(mnc));
+
+    }
+
 }

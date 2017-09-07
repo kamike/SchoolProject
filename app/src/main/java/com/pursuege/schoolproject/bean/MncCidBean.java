@@ -11,7 +11,7 @@ public class MncCidBean {
 
     @Override
     public String toString() {
-        return "MncCidBean{" +
+        return "MncCidBean：" +
                 "mnc='" + mnc + '\'' +
                 ", cidId='" + cidId;
     }

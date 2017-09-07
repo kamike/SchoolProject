@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -98,14 +99,37 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
                 setSimpleSimData();
                 return;
             }
+
+
             if (dataList.size() == 1) {
                 setSim1(dataList.get(0));
+
             } else {
-                setSim1(dataList.get(0));
-                setSim2(dataList.get(1));
+                for (int index = 0; index < dataList.size(); index++) {
+                    if (isRunSim(dataList.get(index).getCarrierName())) {
+                        if (index == 0) {
+                            setSim1(dataList.get(0));
+                        }
+                        if (index == 1) {
+                            setSim2(dataList.get(1));
+                        }
+                    }
+                }
+
             }
         }
 
+    }
+
+    private boolean isRunSim(CharSequence carrierName) {
+        if (TextUtils.isEmpty(carrierName)) {
+            return false;
+        }
+
+        if (carrierName.toString().contains("无")) {
+            return false;
+        }
+        return true;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
@@ -166,16 +190,16 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
                 //中国移动
                 mncSIm1 = "5";
                 ivOperateSim1.setImageResource(R.drawable.icon_mobile);
-            } else if (imsi.startsWith("46001")||imsi.startsWith("46006")||imsi.startsWith("46009")) {
+            } else if (imsi.startsWith("46001") || imsi.startsWith("46006") || imsi.startsWith("46009")) {
                 //中国联通
                 mncSIm1 = "1";
                 ivOperateSim1.setImageResource(R.drawable.icon_unicom);
-            } else if (imsi.startsWith("46003")||imsi.startsWith("46005")||imsi.startsWith("46011")||imsi.startsWith("460011")) {
+            } else if (imsi.startsWith("46003") || imsi.startsWith("46005") || imsi.startsWith("46011") || imsi.startsWith("460011")) {
                 //中国电信
                 mncSIm1 = "3";
                 ivOperateSim1.setImageResource(R.drawable.icon_telecom);
             }
-        }else{
+        } else {
 
         }
     }

@@ -23,6 +23,10 @@ import com.pursuege.schoolproject.bean.MncCidBean;
 import com.pursuege.schoolproject.utils.CidIdUtils;
 import com.pursuege.schoolproject.utils.LogUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -49,7 +53,10 @@ public class MyBackgroundService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        allMncList[0] = new MncCidBean();
+        allMncList[1] = new MncCidBean();
         CidIdUtils.setCidListener(this);
+        EventBus.getDefault().register(this);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         new Thread() {
             @Override
@@ -64,6 +71,7 @@ public class MyBackgroundService extends Service {
 
                     MncCidBean mainMncList = CidIdUtils.getMainMncCid(getApplication());
                     LogUtils.i("主卡数据：" + mainMncList);
+                    EventBus.getDefault().post(mainMncList);
                     boolean isSendNoify = false;
                     //判断主卡
                     if (mainMncList != null) {
@@ -81,6 +89,7 @@ public class MyBackgroundService extends Service {
 
                     //双卡数据
                     LogUtils.i("副卡数据:" + Arrays.toString(allMncList));
+                    EventBus.getDefault().post(allMncList);
                     if (allMncList != null && !isSendNoify) {
                         OUT:
                         for (CidDataBean info : listCacheCidAll) {
@@ -124,7 +133,7 @@ public class MyBackgroundService extends Service {
             SharedPreferences share = getApplication().getSharedPreferences("share", MODE_PRIVATE);
 
             if (share.getBoolean("isJar", true)) {
-                long[] pattern = {10, 300,50,500};   // 停止 开启 停止 开启
+                long[] pattern = {10, 300, 50, 500};   // 停止 开启 停止 开启
                 vibrator.vibrate(pattern, -1);
 
 
@@ -141,7 +150,7 @@ public class MyBackgroundService extends Service {
             }
 
             NotificationCompat.Builder nb = new NotificationCompat.Builder(MyBackgroundService.this);
-            if (msg.what == 0) {
+            if (msg.what >= 0) {
                 nb.setContentTitle(null).setContentText("您已进入优惠基站范围，请断开一次数据连接后再使用");
             } else {
                 nb.setContentTitle(null).setContentText("您已离开基站范围，请注意使用");
@@ -192,9 +201,15 @@ public class MyBackgroundService extends Service {
     public void onDestroy() {
         super.onDestroy();
         ServiceUtils.startService(MyBackgroundService.class);
+        EventBus.getDefault().unregister(this);
         if (vibrator != null) {
             vibrator.cancel();
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFail(String mnc) {
+
     }
 
     @Nullable
