@@ -7,7 +7,7 @@ package com.pursuege.schoolproject.bean;
 public class BaseServerBean {
     public int code;//":"101",
     public String data;//":[],
-    public String state;//:"success"
-    public String message;
+    public boolean success;//:"success"
+    public String msg;
     public String flag;
 }

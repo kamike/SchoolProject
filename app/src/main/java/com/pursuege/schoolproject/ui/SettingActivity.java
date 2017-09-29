@@ -147,8 +147,8 @@ public class SettingActivity extends BaseTitleActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSuccess(BaseServerBean base) {
-        if (!TextUtils.equals(base.state, "success")) {
-            doShowMesage(base.message, null);
+        if (!base.success) {
+            doShowMesage(base.msg, null);
             return;
         }
         if (TextUtils.isEmpty(base.data)) {

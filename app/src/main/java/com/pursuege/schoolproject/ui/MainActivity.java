@@ -67,7 +67,7 @@ public class MainActivity extends BaseTitleActivity {
                     HashMap<String, Object> parmas = new HashMap<>();
                     parmas.put("college", etSearch.getText().toString());
                     parmas.put("page", "1");
-                    NetworkCore.doGetParams(selectShool, parmas, SchollInfoBean[].class);
+                    NetworkCore.doPostParams(selectShool, parmas, SchollInfoBean[].class);
 
                 }
                 return false;

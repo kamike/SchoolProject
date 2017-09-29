@@ -64,8 +64,8 @@ public class NetworkCore implements Constants {
                         EventBus.getDefault().post("");
                         return;
                     }
-                    if (!TextUtils.equals(base.state, "success")) {
-                        EventBus.getDefault().post(base.message);
+                    if (!base.success) {
+                        EventBus.getDefault().post(base.msg);
                         return;
                     }
                     if (t.isArray()) {
@@ -165,8 +165,8 @@ public class NetworkCore implements Constants {
                         EventBus.getDefault().post("");
                         return;
                     }
-                    if (!TextUtils.equals(base.state, "success")) {
-                        EventBus.getDefault().post(base.message);
+                    if (!base.success) {
+                        EventBus.getDefault().post(base.msg);
                         return;
                     }
                     if (t.isArray()) {

@@ -51,4 +51,5 @@ dependencies {
     compile 'com.blankj:utilcode:1.8.2'
     testCompile 'junit:junit:4.12'
     compile 'com.blankj:utilcode:1.8.3'
+    compile 'com.jaredrummler:material-spinner:1.1.0'
 }
