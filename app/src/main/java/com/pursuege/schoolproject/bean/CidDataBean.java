@@ -18,4 +18,11 @@ public class CidDataBean {
     public String loginNo;//":"",
     public int mnc;//":3,
     public Date upTime;//":""
+
+    @Override
+    public String toString() {
+        return
+                "cid=" + cid + ",mnc='" + mnc +
+                        '}';
+    }
 }

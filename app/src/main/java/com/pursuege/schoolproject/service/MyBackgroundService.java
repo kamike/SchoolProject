@@ -72,6 +72,7 @@ public class MyBackgroundService extends Service {
                     MncCidBean mainMncList = CidIdUtils.getMainMncCid(getApplication());
                     LogUtils.i("主卡数据：" + mainMncList);
                     EventBus.getDefault().post(mainMncList);
+                    allMncList[0]=mainMncList;
                     boolean isSendNoify = false;
                     //判断主卡
                     if (mainMncList != null) {

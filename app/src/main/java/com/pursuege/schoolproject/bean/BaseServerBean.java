@@ -8,6 +8,7 @@ public class BaseServerBean {
     public int code;//":"101",
     public String data;//":[],
     public boolean success;//:"success"
-    public String msg;
+    public String message;
+    public String state;
     public String flag;
 }

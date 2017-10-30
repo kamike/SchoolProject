@@ -117,18 +117,40 @@
         android:layout_weight="1"
         android:padding="15dp" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="bottom"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/apply_notify_next_btn"
-        style="@style/style_txt_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/icon_button_bg"
-        android:clickable="true"
-        android:onClick="onclickSubmit"
-        android:paddingBottom="14dp"
-        android:paddingTop="14dp"
-        android:text="@string/submit" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/apply_notify_next_btn"
+            style="@style/style_txt_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:background="@drawable/icon_button_bg"
+            android:clickable="true"
+            android:onClick="onclickSubmit"
+            android:paddingTop="14dp"
+            android:text="@string/submit" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:onClick="getList"
+            android:text="下载列表" />
+    </LinearLayout>
 
 </LinearLayout>

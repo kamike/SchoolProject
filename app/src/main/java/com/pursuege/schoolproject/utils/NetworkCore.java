@@ -28,6 +28,55 @@ import static com.alibaba.fastjson.JSON.parseObject;
 
 public class NetworkCore implements Constants {
 
+    public static void doPostParams(String urlName, HashMap<String, Object> params, final String flag) {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(Constants.TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(Constants.TIMEOUT, TimeUnit.SECONDS)
+                .build();
+        FormBody.Builder formbody = new FormBody.Builder();
+        if (params != null) {
+            for (String key : params.keySet()) {
+                formbody.add(key, params.get(key) + "");
+            }
+        }
+        FormBody body = formbody.build();
+        final Request req = new Request.Builder()
+                .url(Constants.BASEURL + "/" + urlName)
+                .post(body)
+                .addHeader("Content-Type", "applicationapplication/json")
+                .build();
+        client.newCall(req).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                EventBus.getDefault().post("");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String resoult = response.body().string();
+                if (TextUtils.isEmpty(resoult)) {
+                    EventBus.getDefault().post("");
+                    return;
+                }
+                try {
+                    BaseServerBean base = parseObject(resoult, BaseServerBean.class);
+                    if (base == null) {
+                        EventBus.getDefault().post("");
+                        return;
+                    }
+                    base.flag = flag;
+                    EventBus.getDefault().post(base);
+                } catch (JSONException e) {
+                    LogUtils.i("Exception:" + resoult);
+                    EventBus.getDefault().post("");
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+    }
+
     public static void doPostParams(String urlName, HashMap<String, Object> params, final Class t) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(Constants.TIMEOUT, TimeUnit.SECONDS)
@@ -64,8 +113,8 @@ public class NetworkCore implements Constants {
                         EventBus.getDefault().post("");
                         return;
                     }
-                    if (!base.success) {
-                        EventBus.getDefault().post(base.msg);
+                    if (!TextUtils.equals(base.state,"success")) {
+                        EventBus.getDefault().post(base.message);
                         return;
                     }
                     if (t.isArray()) {
@@ -83,6 +132,7 @@ public class NetworkCore implements Constants {
         });
 
     }
+
 
     public static void doGetCid(String urlName, final String flag) {
         OkHttpClient client = new OkHttpClient.Builder()
@@ -155,6 +205,7 @@ public class NetworkCore implements Constants {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String resoult = response.body().string();
+                com.blankj.utilcode.util.LogUtils.i(resoult);
                 if (TextUtils.isEmpty(resoult)) {
                     EventBus.getDefault().post("");
                     return;
@@ -166,7 +217,7 @@ public class NetworkCore implements Constants {
                         return;
                     }
                     if (!base.success) {
-                        EventBus.getDefault().post(base.msg);
+                        EventBus.getDefault().post(base.message);
                         return;
                     }
                     if (t.isArray()) {

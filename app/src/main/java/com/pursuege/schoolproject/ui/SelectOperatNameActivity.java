@@ -57,9 +57,14 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
 
         LinearLayout.LayoutParams paramsSIm = (LinearLayout.LayoutParams) linearSim1.getLayoutParams();
         paramsSIm.topMargin= (int) (params.height*0.228f);
-        paramsSIm.leftMargin=SizeUtils.dp2px(2);
+        paramsSIm.leftMargin=SizeUtils.dp2px(-2);
         linearSim1.setLayoutParams(paramsSIm);
-        linearSim2.setLayoutParams(paramsSIm);
+
+        LinearLayout.LayoutParams paramsSIm2 = (LinearLayout.LayoutParams) linearSim2.getLayoutParams();
+        paramsSIm2.topMargin= (int) (params.height*0.228f);
+        paramsSIm2.leftMargin=SizeUtils.dp2px(-10);
+        linearSim2.setLayoutParams(paramsSIm2);
+        linearSim2.setLayoutParams(paramsSIm2);
 
     }
 

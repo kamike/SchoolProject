@@ -18,6 +18,7 @@ import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.FileIOUtils;
 import com.blankj.utilcode.util.ServiceUtils;
 import com.pursuege.schoolproject.R;
+import com.pursuege.schoolproject.TestDataActivity;
 import com.pursuege.schoolproject.bean.BaseServerBean;
 import com.pursuege.schoolproject.bean.CidDataBean;
 import com.pursuege.schoolproject.bean.MncCidBean;
@@ -34,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class SettingActivity extends BaseTitleActivity {
 
@@ -118,18 +120,20 @@ public class SettingActivity extends BaseTitleActivity {
 //        mncSim1 = "3";
 
         if (!TextUtils.isEmpty(mncSim1)) {
-            StringBuilder sb = new StringBuilder(selectCidData);
-            sb.append("?cidId=").append(cidId);
-            sb.append("&mnc=").append(mncSim1);
-
-            NetworkCore.doGetCid(sb.toString(), "1");
+//            StringBuilder sb = new StringBuilder(selectCidData);
+//            sb.append("?cidId=").append(cidId);
+//            sb.append("&mnc=").append(mncSim1);
+            HashMap<String, Object> params=new HashMap<>();
+            params.put("cidId",cidId);
+            params.put("mnc",mncSim1);
+            NetworkCore.doPostParams(selectCidData,params,"1");
         }
 
         if (!TextUtils.isEmpty(mncSim2) && !TextUtils.equals(mncSim1, mncSim2)) {
-            StringBuilder sb = new StringBuilder(selectCidData);
-            sb.append("?cidId=").append(cidId);
-            sb.append("&mnc=").append(mncSim2);
-            NetworkCore.doGetCid(sb.toString(), "2");
+            HashMap<String, Object> params=new HashMap<>();
+            params.put("cidId",cidId);
+            params.put("mnc",mncSim2);
+            NetworkCore.doPostParams(selectCidData,params,"1");
         }
 
 
@@ -142,13 +146,13 @@ public class SettingActivity extends BaseTitleActivity {
             doShowMesage(NetwException, null);
             return;
         }
-        doShowMesage(msg, null);
+        doShowMesage("服务器异常:"+msg, null);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSuccess(BaseServerBean base) {
-        if (!base.success) {
-            doShowMesage(base.msg, null);
+         if (!TextUtils.equals(base.state,"success")) {
+            doShowMesage("服务器异常:"+base.message, null);
             return;
         }
         if (TextUtils.isEmpty(base.data)) {
@@ -326,4 +330,8 @@ public class SettingActivity extends BaseTitleActivity {
 
     }
 
+
+    public void getList(View v){
+        ActivityUtils.startActivity(TestDataActivity.class);
+    }
 }
