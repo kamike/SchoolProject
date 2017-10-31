@@ -47,27 +47,26 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
     @Override
     public void setupUiView() {
         super.setupUiView();
-        linearImg= (LinearLayout) findViewById(R.id.linear_operate_img);
+        linearImg = (LinearLayout) findViewById(R.id.linear_operate_img);
         linearSim1 = (LinearLayout) findViewById(R.id.select_operate1_linear);
         linearSim2 = (LinearLayout) findViewById(R.id.select_operate2_linear);
 
         ViewGroup.LayoutParams params = linearImg.getLayoutParams();
-        params.height= (int) ((ScreenUtils.getScreenWidth()/2.0f- SizeUtils.dp2px(25))*0.919f);
+        params.height = (int) ((ScreenUtils.getScreenWidth() / 2.0f - SizeUtils.dp2px(25)) * 0.919f);
         linearImg.setLayoutParams(params);
 
         LinearLayout.LayoutParams paramsSIm = (LinearLayout.LayoutParams) linearSim1.getLayoutParams();
-        paramsSIm.topMargin= (int) (params.height*0.228f);
-        paramsSIm.leftMargin=SizeUtils.dp2px(-2);
+        paramsSIm.topMargin = (int) (params.height * 0.228f);
+        paramsSIm.leftMargin = SizeUtils.dp2px(-2);
         linearSim1.setLayoutParams(paramsSIm);
 
         LinearLayout.LayoutParams paramsSIm2 = (LinearLayout.LayoutParams) linearSim2.getLayoutParams();
-        paramsSIm2.topMargin= (int) (params.height*0.228f);
-        paramsSIm2.leftMargin=SizeUtils.dp2px(-10);
+        paramsSIm2.topMargin = (int) (params.height * 0.228f);
+        paramsSIm2.leftMargin = SizeUtils.dp2px(-10);
         linearSim2.setLayoutParams(paramsSIm2);
         linearSim2.setLayoutParams(paramsSIm2);
 
     }
-
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
@@ -80,11 +79,8 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
         }
 
 
-
-
-
-
     }
+
     private MySpinner mySpinner1;
     private MySpinner mySpinner2;
 
@@ -98,9 +94,10 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
         }
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if (requestCode == 0) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                    onStatePermission();
-                }
+                onStatePermission();
+            }
+            if (requestCode == 10) {
+                onWriteExtPermion();
             }
         } else {
             Toast.makeText(this, R.string.permission_fail, Toast.LENGTH_SHORT).show();
@@ -158,7 +155,7 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     private void setSim2(SubscriptionInfo info) {
-        mySpinner2= new MySpinner(this, arrayImgs, linearSim2, new MySpinner.OnViewSelectClickListener() {
+        mySpinner2 = new MySpinner(this, arrayImgs, linearSim2, new MySpinner.OnViewSelectClickListener() {
             @Override
             public void onViewSelect(int position) {
                 onclickSelectSim2(position);
@@ -192,7 +189,7 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     private void setSim1(SubscriptionInfo info) {
-        mySpinner1= new MySpinner(this, arrayImgs, linearSim1, new MySpinner.OnViewSelectClickListener() {
+        mySpinner1 = new MySpinner(this, arrayImgs, linearSim1, new MySpinner.OnViewSelectClickListener() {
             @Override
             public void onViewSelect(int position) {
                 onclickSelectSim1(position);
@@ -225,7 +222,7 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
     }
 
     private void setSimpleSimData() {
-        mySpinner1= new MySpinner(this, arrayImgs, linearSim1, new MySpinner.OnViewSelectClickListener() {
+        mySpinner1 = new MySpinner(this, arrayImgs, linearSim1, new MySpinner.OnViewSelectClickListener() {
             @Override
             public void onViewSelect(int position) {
                 onclickSelectSim1(position);
@@ -256,7 +253,7 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
     }
 
     private String[] arrayOperate = {"中国移动", "中国联通", "中国电信"};
-    private int[] arrayImgs = {R.drawable.icon_mobile,R.drawable.icon_unicom,R.drawable.icon_telecom};
+    private int[] arrayImgs = {R.drawable.icon_mobile, R.drawable.icon_unicom, R.drawable.icon_telecom};
     private int selectSim1 = 0;
     private int selectSim2 = 0;
 
@@ -280,7 +277,7 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
             case 2:
                 mncSIm1 = "3";
 //                        ivOperateSim1.setImageResource(R.drawable.icon_telecom);
-              //  ivOperateSim1.setSelection(2);
+                //  ivOperateSim1.setSelection(2);
                 break;
         }
 //            }
@@ -299,16 +296,16 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
             case 0:
                 mncSIm2 = "5";
                 // ivOperateSim2.setImageResource(R.drawable.icon_mobile);
-               // ivOperateSim2.setSelection(0);
+                // ivOperateSim2.setSelection(0);
                 break;
             case 1:
                 mncSIm2 = "1";
                 // ivOperateSim2.setImageResource(R.drawable.icon_unicom);
-               // ivOperateSim2.setSelection(1);
+                // ivOperateSim2.setSelection(1);
                 break;
             case 2:
                 mncSIm2 = "3";
-               // ivOperateSim2.setSelection(2);
+                // ivOperateSim2.setSelection(2);
                 //ivOperateSim2.setImageResource(R.drawable.icon_telecom);
                 break;
         }
@@ -320,11 +317,18 @@ public class SelectOperatNameActivity extends BaseTitleActivity {
     private String mncSIm2;
 
     public void onclickOperateNext(View v) {
+        if (PermissionUtil.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, 10)) {
+            onWriteExtPermion();
+        }
+
+
+    }
+
+    private void onWriteExtPermion() {
         String str = getIntent().getStringExtra("id_cid");
         LogUtils.i("cidid--end:" + str);
 
         SettingActivity.startActivity(this, str, mncSIm1, mncSIm2);
-
     }
 
 

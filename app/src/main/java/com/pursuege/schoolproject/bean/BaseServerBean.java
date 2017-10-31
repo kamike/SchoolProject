@@ -11,4 +11,5 @@ public class BaseServerBean {
     public String message;
     public String state;
     public String flag;
+    public String msg;
 }

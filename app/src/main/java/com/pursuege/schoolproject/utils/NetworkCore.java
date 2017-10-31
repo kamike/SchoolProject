@@ -103,6 +103,7 @@ public class NetworkCore implements Constants {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String resoult = response.body().string();
+                com.blankj.utilcode.util.LogUtils.i("=="+resoult);
                 if (TextUtils.isEmpty(resoult)) {
                     EventBus.getDefault().post("");
                     return;
@@ -114,8 +115,14 @@ public class NetworkCore implements Constants {
                         return;
                     }
                     if (!TextUtils.equals(base.state,"success")) {
-                        EventBus.getDefault().post(base.message);
-                        return;
+                        if(!base.success){
+                            EventBus.getDefault().post(base.msg);
+                            return;
+                        }
+                        if(base.message!=null){
+                            EventBus.getDefault().post(base.message);
+                            return;
+                        }
                     }
                     if (t.isArray()) {
                         EventBus.getDefault().post(JSON.parseArray(base.data, t.getComponentType()));
