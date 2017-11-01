@@ -11,9 +11,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.FileIOUtils;
 import com.pursuege.schoolproject.bean.CidDataBean;
-import com.pursuege.schoolproject.bean.MncCidBean;
 import com.pursuege.schoolproject.ui.BaseActivity;
-import com.pursuege.schoolproject.utils.CidIdUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,28 +29,32 @@ public class TestDataActivity extends BaseActivity {
     public void setupUiView() {
         listView = (ListView) findViewById(R.id.test_listview);
     }
-
+    ArrayList<CidDataBean> listCid;
     @Override
     public void setupAllData() {
-        MncCidBean mainMnc = CidIdUtils.getMainMncCid(this);
-        if (mainMnc == null) {
-            doShowToast("未获取到主卡数据");
-            return;
-        }
-        File file = new File(Environment.getExternalStorageDirectory() + "/data/" + mainMnc.mnc + "/cid_all_data");
-        if (!file.exists()) {
+        File file = new File(Environment.getExternalStorageDirectory() + "/data/sim1/cid_all_data");
+        File file2 = new File(Environment.getExternalStorageDirectory() + "/data/sim2/cid_all_data");
+        if (!file.exists() && !file2.exists()) {
             doShowToast("没有主卡对应的数据，请重新更新数据！");
             return;
         }
         String data = FileIOUtils.readFile2String(file);
-        if (TextUtils.isEmpty(data)) {
+        String data2 = FileIOUtils.readFile2String(file2);
+        if (TextUtils.isEmpty(data) && TextUtils.isEmpty(data2)) {
             doShowToast("没有主卡对应的数据，请重新更新数据！");
             return;
         }
-       final ArrayList<CidDataBean> listCid = (ArrayList<CidDataBean>) JSON.parseArray(data, CidDataBean.class);
+        listCid= (ArrayList<CidDataBean>) JSON.parseArray(data, CidDataBean.class);
+        ArrayList<CidDataBean> listCid2 = (ArrayList<CidDataBean>) JSON.parseArray(data2, CidDataBean.class);
         if (listCid == null || listCid.isEmpty()) {
             doShowToast("没有主卡对应的数据，请重新更新数据！");
             return;
+        }
+        if (listCid == null) {
+            listCid = new ArrayList<>();
+        }
+        if (listCid2 != null) {
+            listCid.addAll(listCid2);
         }
         listView.setAdapter(new BaseAdapter() {
             @Override

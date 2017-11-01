@@ -72,17 +72,20 @@ public class MyBackgroundService extends Service {
                     MncCidBean mainMncList = CidIdUtils.getMainMncCid(getApplication());
                     LogUtils.i("主卡数据：" + mainMncList);
                     EventBus.getDefault().post(mainMncList);
-                    allMncList[0]=mainMncList;
+                    allMncList[0] = mainMncList;
                     boolean isSendNoify = false;
                     //判断主卡
                     if (mainMncList != null) {
                         for (CidDataBean cacheCid : listCacheCidAll) {
                             if (mainMncList.mnc == cacheCid.mnc) {
-                                if (TextUtils.equals(mainMncList.cidId + "", cacheCid.cid)) {
-                                    //在优惠区
-                                    handler.sendEmptyMessage(cacheCid.mnc);
-                                    isSendNoify = true;
-                                    break;
+                                if (cacheCid.cid != null) {
+
+                                    if (TextUtils.equals(mainMncList.cidId + "", cacheCid.cid)) {
+                                        //在优惠区
+                                        handler.sendEmptyMessage(cacheCid.mnc);
+                                        isSendNoify = true;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -94,16 +97,20 @@ public class MyBackgroundService extends Service {
                     if (allMncList != null && !isSendNoify) {
                         OUT:
                         for (CidDataBean info : listCacheCidAll) {
-
+                            if (info.cid == null) {
+                                continue;
+                            }
                             for (MncCidBean mncCid : allMncList) {
-                                if (mncCid == null) {
+                                if (mncCid == null || mncCid.cidId == null) {
                                     continue;
                                 }
-                                if (TextUtils.equals(info.cid + "", mncCid.cidId)) {
-                                    //在优惠区
-                                    handler.sendEmptyMessage(info.mnc);
-                                    isSendNoify = true;
-                                    break OUT;
+                                if (info.mnc == mncCid.mnc) {
+                                    if (TextUtils.equals(info.cid + "", mncCid.cidId)) {
+                                        //在优惠区
+                                        handler.sendEmptyMessage(info.mnc);
+                                        isSendNoify = true;
+                                        break OUT;
+                                    }
                                 }
                             }
 

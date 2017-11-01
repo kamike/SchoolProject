@@ -89,8 +89,7 @@ public class SettingActivity extends BaseTitleActivity {
 
     SharedPreferences share;
     private String cidId;
-    private String mncSim1;
-    private String mncSim2;
+
 
     @Override
     public void setupAllData() {
@@ -101,10 +100,9 @@ public class SettingActivity extends BaseTitleActivity {
         } else {
             btnSubmit.setVisibility(View.VISIBLE);
         }
-
         cidId = getIntent().getStringExtra("id_cid");
-        mncSim1 = getIntent().getStringExtra("mncSIm1");
-        mncSim2 = getIntent().getStringExtra("mncSIm2");
+        String mncSim1 = getIntent().getStringExtra("mncSIm1");
+        String mncSim2 = getIntent().getStringExtra("mncSIm2");
         LogUtils.i("最终请求参数：" + cidId + "," + mncSim1 + "," + mncSim2);
 
         if (TextUtils.isEmpty(cidId)) {
@@ -117,23 +115,24 @@ public class SettingActivity extends BaseTitleActivity {
         }
         //test
 //        cidId = "200100";
-//        mncSim1 = "3";
+//        mncSim1 = "1";
+//        mncSim2 = "1";
 
         if (!TextUtils.isEmpty(mncSim1)) {
 //            StringBuilder sb = new StringBuilder(selectCidData);
 //            sb.append("?cidId=").append(cidId);
 //            sb.append("&mnc=").append(mncSim1);
-            HashMap<String, Object> params=new HashMap<>();
-            params.put("cidId",cidId);
-            params.put("mnc",mncSim1);
-            NetworkCore.doPostParams(selectCidData,params,"1");
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("cidId", cidId);
+            params.put("mnc", mncSim1);
+            NetworkCore.doPostParams(selectCidData, params, "1");
         }
 
         if (!TextUtils.isEmpty(mncSim2) && !TextUtils.equals(mncSim1, mncSim2)) {
-            HashMap<String, Object> params=new HashMap<>();
-            params.put("cidId",cidId);
-            params.put("mnc",mncSim2);
-            NetworkCore.doPostParams(selectCidData,params,"1");
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("cidId", cidId);
+            params.put("mnc", mncSim2);
+            NetworkCore.doPostParams(selectCidData, params, "1");
         }
 
 
@@ -146,13 +145,13 @@ public class SettingActivity extends BaseTitleActivity {
             doShowMesage(NetwException, null);
             return;
         }
-        doShowMesage("服务器异常:"+msg, null);
+        doShowMesage("服务器异常:" + msg, null);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSuccess(BaseServerBean base) {
-         if (!TextUtils.equals(base.state,"success")) {
-            doShowMesage("服务器异常:"+base.message, null);
+        if (!base.success) {
+            doShowMesage("服务器异常:" + base.message, null);
             return;
         }
         if (TextUtils.isEmpty(base.data)) {
@@ -162,7 +161,7 @@ public class SettingActivity extends BaseTitleActivity {
         File f = null;
         if (TextUtils.equals(base.flag, "1")) {
             //根据文件名字来区分存的运营商
-            File file = new File(Environment.getExternalStorageDirectory() + "/data/" + mncSim1);
+            File file = new File(Environment.getExternalStorageDirectory() + "/data/sim1");
             if (!file.exists()) {
                 file.mkdirs();
             }
@@ -176,7 +175,7 @@ public class SettingActivity extends BaseTitleActivity {
             }
 
         } else {
-            File file = new File(Environment.getExternalStorageDirectory() + "/data/" + mncSim2);
+            File file = new File(Environment.getExternalStorageDirectory() + "/data/sim2");
             if (!file.exists()) {
                 file.mkdirs();
             }
@@ -241,9 +240,11 @@ public class SettingActivity extends BaseTitleActivity {
     }
 
     public void onclickSubmit(View v) {
-        File file = new File(Environment.getExternalStorageDirectory() + "/data/");
+        File file = new File(Environment.getExternalStorageDirectory() + "/data/sim1");
+        File file2 = new File(Environment.getExternalStorageDirectory() + "/data/sim2");
         File[] fileArray = file.listFiles();
-        if (fileArray == null || fileArray.length <= 0) {
+        File[] fileArray2 = file2.listFiles();
+        if ((fileArray == null || fileArray.length <= 0) && (fileArray2 == null || fileArray2.length <= 0)) {
             doShowMesage("未存储到任何数据，请稍后再试！", null);
             return;
         }
@@ -272,20 +273,29 @@ public class SettingActivity extends BaseTitleActivity {
             doShowToast("未获取到主卡数据");
             return;
         }
-        File file = new File(Environment.getExternalStorageDirectory() + "/data/" + mainMnc.mnc + "/cid_all_data");
-        if (!file.exists()) {
+        File file = new File(Environment.getExternalStorageDirectory() + "/data/sim1/cid_all_data");
+        File file2 = new File(Environment.getExternalStorageDirectory() + "/data/sim2/cid_all_data");
+        if (!file.exists() && !file2.exists()) {
             doShowToast("没有主卡对应的数据，请重新更新数据！");
             return;
         }
         String data = FileIOUtils.readFile2String(file);
-        if (TextUtils.isEmpty(data)) {
+        String data2 = FileIOUtils.readFile2String(file2);
+        if (TextUtils.isEmpty(data) && TextUtils.isEmpty(data2)) {
             doShowToast("没有主卡对应的数据，请重新更新数据！");
             return;
         }
         ArrayList<CidDataBean> listCid = (ArrayList<CidDataBean>) JSON.parseArray(data, CidDataBean.class);
+        ArrayList<CidDataBean> listCid2 = (ArrayList<CidDataBean>) JSON.parseArray(data2, CidDataBean.class);
         if (listCid == null || listCid.isEmpty()) {
             doShowToast("没有主卡对应的数据，请重新更新数据！");
             return;
+        }
+        if (listCid == null) {
+            listCid = new ArrayList<>();
+        }
+        if (listCid2 != null) {
+            listCid.addAll(listCid2);
         }
         MyBackgroundService.listCacheCidAll = listCid;
         //拿到副卡的数据
@@ -331,7 +341,7 @@ public class SettingActivity extends BaseTitleActivity {
     }
 
 
-    public void getList(View v){
+    public void getList(View v) {
         ActivityUtils.startActivity(TestDataActivity.class);
     }
 }

@@ -15,6 +15,7 @@ public interface Constants {
 
     String NetwException = "Network Exception";
 
-    String selectShool = "/school-app/school/list";
-    String selectCidData = "/ssm/getTabCid";
+    String selectShool = "school-app/school/list";
+//    String selectCidData = "/ssm/getTabCid";
+    String selectCidData = "school-app/cid/list";
 }
