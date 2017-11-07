@@ -116,7 +116,7 @@ public class SettingActivity extends BaseTitleActivity {
         //test
 //        cidId = "200100";
 //        mncSim1 = "1";
-//        mncSim2 = "1";
+//        mncSim2 = "5";
 
         if (!TextUtils.isEmpty(mncSim1)) {
 //            StringBuilder sb = new StringBuilder(selectCidData);
@@ -132,7 +132,7 @@ public class SettingActivity extends BaseTitleActivity {
             HashMap<String, Object> params = new HashMap<>();
             params.put("cidId", cidId);
             params.put("mnc", mncSim2);
-            NetworkCore.doPostParams(selectCidData, params, "1");
+            NetworkCore.doPostParams(selectCidData, params, "2");
         }
 
 
